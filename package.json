@@ -1,0 +1,24 @@
+{
+  "name": "the-fooder-foodfinder",
+  "version": "1.0.0",
+  "description": "The Fooder - Authentic Andhra Restaurant with Vercel & MongoDB Atlas Deployment",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "echo 'Ready for Vercel deployment'"
+  },
+  "dependencies": {
+    "mongodb": "^6.10.0"
+  },
+  "keywords": [
+    "the-fooder",
+    "andhra-food",
+    "restaurant",
+    "vercel",
+    "mongodb-atlas",
+    "github-actions"
+  ],
+  "author": "The Fooder",
+  "license": "ISC"
+}

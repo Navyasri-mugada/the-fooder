@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Fooder - Real Andhra Flavour | Food Finder & Ordering</title>
+  <meta name="description" content="At The Fooder we serve authentic gongura pickle, pappu, ghee and fiery curries cooked the way Vijayawada cooks them. Order online or book a table.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="container announcement-content">
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        <span class="offer-badge">🎁 Special Offer</span>
+        <span>Free <strong>Bobbatlu</strong> sweet on all orders above <strong>₹500</strong> across all 6 branches!</span>
+      </div>
+      <div class="announcement-links">
+        <span id="header-branch-pill" class="quick-branch-pill" onclick="openBranchModal()">
+          <span class="status-dot"></span>
+          <span id="quick-branch-text">Vijayawada (Labbipet) • Open</span>
+          <span>▾</span>
+        </span>
+        <a href="#table-booking" style="color:#fde047; font-weight:700;">Book a Table ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <!-- Logo -->
+      <a href="#" class="brand-logo">
+        <div class="brand-icon">🌶️</div>
+        <div class="brand-text">
+          <h1>The Fooder</h1>
+          <span>Authentic Andhra Food</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="#menu-section" class="nav-link active">Menu</a></li>
+          <li><a href="#branches-section" class="nav-link">Our Branches</a></li>
+          <li><a href="#offers-reviews" class="nav-link">Offers & Reviews</a></li>
+          <li><a href="#table-booking" class="nav-link">Table Reservation</a></li>
+          <li><a href="javascript:void(0)" onclick="openTrackOrderModal()" class="nav-link">Track Order</a></li>
+        </ul>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="nav-actions">
+        <!-- Sound Toggle -->
+        <button id="sound-toggle-btn" class="btn-sound" title="Toggle audio feedback" onclick="toggleSound()">
+          🔔
+        </button>
+
+        <!-- Branch Selector Pill -->
+        <button class="branch-select-btn" onclick="openBranchModal()">
+          <span class="status-dot"></span>
+          <span id="nav-branch-name">Vijayawada</span>
+          <span style="font-size:0.75rem; color:var(--text-light);">▼</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button id="nav-cart-btn" class="btn-cart" onclick="toggleCartDrawer()">
+          <span>🛒 Cart</span>
+          <span id="cart-item-count" class="cart-count">0</span>
+          <span id="cart-nav-total" style="font-size:0.85rem; margin-left:2px; font-weight:800;">₹0</span>
+        </button>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button class="btn-mobile-nav" onclick="toggleMobileNav()" aria-label="Toggle navigation">
+          ☰
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-text-col">
+            <div class="hero-badge-tag">
+              <span>🌾 Desi Ghee & Fresh Gongura</span>
+            </div>
+            <h1 class="hero-title">
+              Real Andhra flavour, <br>from <span class="highlight">Vijayawada</span> to your table.
+            </h1>
+            <p class="hero-subtitle">
+              At The Fooder we serve gongura pickle, pappu, ghee and fiery curries cooked the way Vijayawada cooks them. Order for delivery or book a table in your city.
+            </p>
+            <div class="hero-cta-group">
+              <a href="#menu-section" class="btn-primary">
+                <span>Browse Menu & Order</span>
+                <span>→</span>
+              </a>
+              <a href="#table-booking" class="btn-secondary">
+                <span>Reserve a Table</span>
+              </a>
+              <button class="btn-secondary" onclick="openBranchModal()">
+                <span>📍 Change City</span>
+              </button>
+            </div>
+            <div class="hero-highlights">
+              <div class="highlight-stat">
+                <h4>6 Cities</h4>
+                <p>AP & Telangana</p>
+              </div>
+              <div class="highlight-stat">
+                <h4>100% Desi</h4>
+                <p>Authentic Recipes</p>
+              </div>
+              <div class="highlight-stat">
+                <h4>30-45m</h4>
+                <p>Fast Door Delivery</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="hero-main-card">
+              <div class="hero-offer-sticker">
+                <div>FREE SWEET</div>
+                <div style="font-size:0.75rem; font-weight:600;">On orders ₹500+</div>
+              </div>
+              <h3 style="font-size:1.25rem; font-weight:800; color:var(--primary); margin-bottom:1rem;">
+                Today's Special Spread
+              </h3>
+              <div class="hero-feature-list">
+                <div class="feature-pill">
+                  <div class="feature-icon green">🌿</div>
+                  <div class="feature-text">
+                    <h4>Andhra Veg Meals</h4>
+                    <p>Rice, pappu, gongura pachadi, curries, rasam, curd & ghee (₹180)</p>
+                  </div>
+                </div>
+                <div class="feature-pill">
+                  <div class="feature-icon red">🍗</div>
+                  <div class="feature-text">
+                    <h4>Gongura Mutton</h4>
+                    <p>Slow-cooked mutton with tangy sour gongura leaves (₹360)</p>
+                  </div>
+                </div>
+                <div class="feature-pill">
+                  <div class="feature-icon gold">🍯</div>
+                  <div class="feature-text">
+                    <h4>Pootharekulu & Bobbatlu</h4>
+                    <p>Authentic paper-thin rice sweet with ghee and sugar (₹120)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Active Branch & Delivery Indicator Banner -->
+    <div class="container">
+      <div class="active-branch-banner">
+        <div class="branch-info-inline">
+          <span class="branch-city-tag" id="banner-branch-city">Vijayawada Branch</span>
+          <div class="branch-meta-text">
+            <strong>Address:</strong> <span id="banner-branch-address">MG Road, Labbipet</span>
+          </div>
+          <div class="branch-meta-text">
+            <strong>Delivery Time:</strong> <span id="banner-branch-delivery">30-40 min</span>
+          </div>
+          <div class="branch-meta-text">
+            <strong>Timings:</strong> <span id="banner-branch-timings">11:00 am - 10:30 pm</span>
+          </div>
+        </div>
+        <div>
+          <button class="btn-secondary" style="padding:0.45rem 1rem; font-size:0.85rem;" onclick="openBranchModal()">
+            Select Another City
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Menu -->
+    <section id="menu-section" class="section-padding">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-subhead">Explore Our Delicacies</span>
+          <h2 class="section-title">The Fooder Kitchen Menu</h2>
+          <p class="section-desc">Handcrafted traditional dishes from Andhra Pradesh, prepared daily with pure ghee and original spice blends.</p>
+        </div>
+
+        <!-- Filter & Search Controls Bar -->
+        <div class="menu-controls">
+          <div class="menu-filter-row">
+            <!-- Category Tabs -->
+            <div class="category-tabs" id="category-tabs-container">
+              <!-- Rendered via JS -->
+            </div>
+
+            <!-- Search & Veg/Non-Veg Filter -->
+            <div class="search-diet-wrap">
+              <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="menu-search-input" placeholder="Search dishes, gongura, biryani..." oninput="handleMenuSearch(this.value)">
+              </div>
+
+              <div class="diet-toggle-group">
+                <button class="diet-pill active" onclick="setDietFilter('all')">All</button>
+                <button class="diet-pill" onclick="setDietFilter('Veg')">
+                  <span class="diet-indicator veg" style="width:12px; height:12px; border-width:1px; margin-right:4px;">
+                    <span class="dot" style="width:5px; height:5px;"></span>
+                  </span>
+                  Veg
+                </button>
+                <button class="diet-pill" onclick="setDietFilter('Non-veg')">
+                  <span class="diet-indicator nonveg" style="width:12px; height:12px; border-width:1px; margin-right:4px;">
+                    <span class="dot" style="border-bottom-width:5px; border-left-width:3px; border-right-width:3px;"></span>
+                  </span>
+                  Non-Veg
+                </button>
+              </div>
+
+              <!-- Sort Dropdown -->
+              <select id="menu-sort-select" class="form-select" style="width:auto; padding:0.45rem 0.85rem; font-size:0.85rem;" onchange="handleSortChange(this.value)">
+                <option value="default">Sort: Recommended</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="name-asc">Alphabetical (A-Z)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Menu Dishes Grid -->
+        <div class="menu-grid" id="menu-items-grid">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 1: Branches -->
+    <section id="branches-section" class="section-padding" style="background-color: var(--bg-card-alt);">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-subhead">Find Your Local Fooder</span>
+          <h2 class="section-title">Our Restaurant Branches</h2>
+          <p class="section-desc">Serving real Andhra taste across Vijayawada, Guntur, Eluru, Machilipatnam, Tenali and Hyderabad.</p>
+        </div>
+
+        <div class="branch-grid" id="branches-cards-grid">
+          <!-- Populated via JS -->
+        </div>
+
+        <p style="text-align:center; font-size:0.85rem; color:var(--text-light); margin-top:2rem;">
+          * Delivery times are estimates and depend on distance and rush hours.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 3: Offers & Guest Reviews -->
+    <section id="offers-reviews" class="section-padding">
+      <div class="container">
+        <!-- Promotional Banner -->
+        <div class="promo-card">
+          <span class="promo-badge">Limited Time Offer</span>
+          <h3>Free Sweet on orders above Rs. 500</h3>
+          <p>Get a complimentary authentic <strong>Bobbatlu</strong> (sweet flatbread stuffed with chana dal and jaggery) automatically added with every big order. Valid at all six branches!</p>
+          <button class="btn-primary" style="background:var(--gold); border:none;" onclick="smoothScrollTo('#menu-section')">
+            Order Now & Unlock Free Sweet
+          </button>
+        </div>
+
+        <!-- Guest Reviews -->
+        <div class="section-head">
+          <span class="section-subhead">Testimonials</span>
+          <h2 class="section-title">What Our Guests Say</h2>
+          <p class="section-desc">Real stories from food lovers who savor our authentic Vijayawada preparations.</p>
+        </div>
+
+        <div class="reviews-grid" id="reviews-grid">
+          <!-- Populated via JS -->
+        </div>
+
+        <!-- Write Review Section -->
+        <div class="review-form-box">
+          <h3 style="font-size:1.15rem; font-weight:800; color:var(--primary); margin-bottom:0.5rem; text-align:center;">
+            Have you dined with us? Share your review!
+          </h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); text-align:center; margin-bottom:1.25rem;">
+            Your feedback helps us keep the Andhra authenticity alive.
+          </p>
+          <form id="add-review-form" onsubmit="handleReviewSubmit(event)">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Your Name</label>
+                <input type="text" id="review-name" class="form-input" placeholder="e.g. Ramesh Reddy" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Your Branch / City</label>
+                <select id="review-branch" class="form-select" required>
+                  <option value="Vijayawada">Vijayawada</option>
+                  <option value="Guntur">Guntur</option>
+                  <option value="Eluru">Eluru</option>
+                  <option value="Machilipatnam">Machilipatnam</option>
+                  <option value="Tenali">Tenali</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Dish Ordered</label>
+                <input type="text" id="review-dish" class="form-input" placeholder="e.g. Natu Kodi Pulusu, Chicken Meals" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Rating</label>
+                <select id="review-rating" class="form-select">
+                  <option value="5">★★★★★ (5 / 5 - Exceptional)</option>
+                  <option value="4">★★★★☆ (4 / 5 - Very Good)</option>
+                  <option value="3">★★★☆☆ (3 / 5 - Good)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Your Experience / Feedback</label>
+              <textarea id="review-text" class="form-textarea" rows="2" placeholder="Tell us about the flavour, spices and service..." required></textarea>
+            </div>
+            <div style="text-align:center;">
+              <button type="submit" class="btn-primary" style="padding:0.6rem 1.75rem;">Submit Review</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Table Booking -->
+    <section id="table-booking" class="section-padding" style="background-color: var(--bg-card-alt);">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-subhead">Dine-in Experience</span>
+          <h2 class="section-title">Book a Table in Your City</h2>
+          <p class="section-desc">Give your name, a 10-digit phone number, the branch, date and number of guests. The branch calls you to confirm.</p>
+        </div>
+
+        <div style="max-width:700px; margin:0 auto; background:#fff; padding:2rem; border-radius:var(--radius-lg); border:1px solid var(--border-medium); box-shadow:var(--shadow-md);">
+          <form id="table-reservation-form" onsubmit="handleReservationSubmit(event)">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" id="res-name" class="form-input" placeholder="Enter your full name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">10-Digit Mobile Phone Number *</label>
+                <input type="tel" id="res-phone" class="form-input" placeholder="e.g. 9848012345" pattern="[0-9]{10}" maxlength="10" required>
+                <span style="font-size:0.75rem; color:var(--text-light);">Branch will call this number to confirm.</span>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Select Branch *</label>
+                <select id="res-branch" class="form-select" required>
+                  <option value="Vijayawada">Vijayawada (MG Road, Labbipet)</option>
+                  <option value="Guntur">Guntur (Brodipet 3rd Lane)</option>
+                  <option value="Eluru">Eluru (Powerpet Main Road)</option>
+                  <option value="Machilipatnam">Machilipatnam (Chilakalapudi Road)</option>
+                  <option value="Tenali">Tenali (Bose Road)</option>
+                  <option value="Hyderabad">Hyderabad (Road No. 36, Jubilee Hills)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Number of Guests *</label>
+                <select id="res-guests" class="form-select" required>
+                  <option value="1">1 Person</option>
+                  <option value="2" selected>2 Persons</option>
+                  <option value="3">3 Persons</option>
+                  <option value="4">4 Persons (Family Table)</option>
+                  <option value="5">5 Persons</option>
+                  <option value="6">6 Persons</option>
+                  <option value="8">8 Persons (Large Table)</option>
+                  <option value="10+">10+ Persons (Party Hall)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Date *</label>
+                <input type="date" id="res-date" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Preferred Time Slot *</label>
+                <select id="res-time" class="form-select" required>
+                  <option value="12:00 PM">12:00 PM (Lunch)</option>
+                  <option value="12:30 PM">12:30 PM (Lunch)</option>
+                  <option value="01:00 PM">01:00 PM (Lunch)</option>
+                  <option value="01:30 PM">01:30 PM (Lunch)</option>
+                  <option value="02:00 PM">02:00 PM (Lunch)</option>
+                  <option value="07:00 PM">07:00 PM (Dinner)</option>
+                  <option value="07:30 PM">07:30 PM (Dinner)</option>
+                  <option value="08:00 PM">08:00 PM (Dinner)</option>
+                  <option value="08:30 PM">08:30 PM (Dinner)</option>
+                  <option value="09:00 PM">09:00 PM (Dinner)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Special Requests (Optional)</label>
+              <input type="text" id="res-notes" class="form-input" placeholder="e.g. High chair needed, anniversary celebration, traditional seating">
+            </div>
+
+            <div style="text-align:center; margin-top:1.5rem;">
+              <button type="submit" class="btn-primary" style="padding:0.85rem 2.5rem; font-size:1.05rem;">
+                Request Table Reservation
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Slide-out Cart Drawer -->
+  <div class="cart-overlay" id="cart-overlay" onclick="toggleCartDrawer()"></div>
+  <aside class="cart-drawer" id="cart-drawer">
+    <div class="cart-header">
+      <h3>
+        <span>🛒</span>
+        <span>Your Food Basket</span>
+      </h3>
+      <button class="btn-close-cart" onclick="toggleCartDrawer()">✕</button>
+    </div>
+
+    <!-- Free Sweet Perk Progress Bar -->
+    <div class="free-sweet-perk-box">
+      <div class="perk-text" id="free-sweet-perk-text">
+        <span>🎁 Add ₹500 to get a FREE Bobbatlu</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="free-sweet-progress" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Items List Body -->
+    <div class="cart-items-body" id="cart-items-list">
+      <!-- Populated dynamically via JS -->
+    </div>
+
+    <!-- Cart Footer & Bill Breakdown -->
+    <div class="cart-footer">
+      <div class="cart-bill-line">
+        <span>Item Total</span>
+        <span id="bill-subtotal">₹0</span>
+      </div>
+      <div class="cart-bill-line" id="bill-free-sweet-line" style="display:none; color:#15803d; font-weight:700;">
+        <span>Free Sweet Promo (Bobbatlu)</span>
+        <span>FREE (₹0)</span>
+      </div>
+      <div class="cart-bill-line">
+        <span>Delivery Fee (<span id="bill-branch-city">Vijayawada</span>)</span>
+        <span style="color:#15803d; font-weight:700;">FREE</span>
+      </div>
+      <div class="cart-bill-line total">
+        <span>To Pay</span>
+        <span id="bill-total">₹0</span>
+      </div>
+      <button class="btn-checkout" id="btn-proceed-checkout" onclick="openCheckoutModal()">
+        <span>Proceed to Checkout</span>
+        <span>→</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Checkout Modal -->
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Complete Your Order</h3>
+        <button class="btn-close-cart" onclick="closeCheckoutModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:var(--primary-subtle); border-radius:var(--radius-md); padding:0.85rem 1rem; margin-bottom:1.25rem; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:0.75rem; text-transform:uppercase; color:var(--primary); font-weight:800;">Fulfilling Branch</div>
+            <strong id="checkout-branch-name" style="color:var(--primary-dark);">Vijayawada (MG Road, Labbipet)</strong>
+          </div>
+          <span style="font-size:0.82rem; font-weight:700; background:#fff; padding:0.25rem 0.6rem; border-radius:var(--radius-full); border:1px solid var(--border-medium);">
+            30-40 min est.
+          </span>
+        </div>
+
+        <form id="checkout-form" onsubmit="handleOrderSubmission(event)">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="order-customer-name" class="form-input" placeholder="e.g. Ananya Rao" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">10-Digit Mobile Number *</label>
+              <input type="tel" id="order-customer-phone" class="form-input" placeholder="e.g. 9848099999" pattern="[0-9]{10}" maxlength="10" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Delivery Street Address *</label>
+            <input type="text" id="order-address" class="form-input" placeholder="House/Flat No., Building name, Street" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Landmark / Cooking Note (Optional)</label>
+            <input type="text" id="order-notes" class="form-input" placeholder="e.g. Near Ram Mandir, extra gongura chutney please">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Choose Payment Method *</label>
+            <div class="payment-selector">
+              <div class="payment-option-card selected" id="pay-opt-cod" onclick="selectPaymentMethod('COD')">
+                <div class="payment-icon">💵</div>
+                <div>
+                  <strong>Cash on Delivery</strong>
+                  <div style="font-size:0.75rem; color:var(--text-muted);">Pay cash or UPI at your doorstep</div>
+                </div>
+              </div>
+              <div class="payment-option-card" id="pay-opt-upi" onclick="selectPaymentMethod('UPI')">
+                <div class="payment-icon">📱</div>
+                <div>
+                  <strong>Online UPI</strong>
+                  <div style="font-size:0.75rem; color:var(--text-muted);">GPay, PhonePe, Paytm QR</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- UPI Container -->
+            <div id="upi-details-box" class="upi-box" style="display:none;">
+              <p style="font-size:0.85rem; font-weight:700; color:var(--primary);">Instant UPI Payment</p>
+              <div class="upi-apps-row">
+                <span class="upi-app-badge">🟢 Google Pay</span>
+                <span class="upi-app-badge">🟣 PhonePe</span>
+                <span class="upi-app-badge">🔵 Paytm</span>
+              </div>
+              <!-- Generated QR Canvas / Mockup -->
+              <div style="display:inline-block; padding:12px; background:#fff; border-radius:12px; border:1px solid var(--border-medium); margin:0.5rem 0;">
+                <svg width="120" height="120" viewBox="0 0 100 100" style="display:block;">
+                  <rect width="100" height="100" fill="#ffffff"/>
+                  <rect x="5" y="5" width="30" height="30" fill="#0c3b2e" rx="4"/>
+                  <rect x="10" y="10" width="20" height="20" fill="#ffffff" rx="2"/>
+                  <rect x="14" y="14" width="12" height="12" fill="#0c3b2e"/>
+                  <rect x="65" y="5" width="30" height="30" fill="#0c3b2e" rx="4"/>
+                  <rect x="70" y="10" width="20" height="20" fill="#ffffff" rx="2"/>
+                  <rect x="74" y="14" width="12" height="12" fill="#0c3b2e"/>
+                  <rect x="5" y="65" width="30" height="30" fill="#0c3b2e" rx="4"/>
+                  <rect x="10" y="70" width="20" height="20" fill="#ffffff" rx="2"/>
+                  <rect x="14" y="74" width="12" height="12" fill="#0c3b2e"/>
+                  <rect x="42" y="12" width="16" height="6" fill="#d92d20"/>
+                  <rect x="42" y="24" width="16" height="10" fill="#0c3b2e"/>
+                  <rect x="42" y="42" width="16" height="16" fill="#d92d20"/>
+                  <rect x="12" y="42" width="20" height="10" fill="#0c3b2e"/>
+                  <rect x="68" y="42" width="22" height="10" fill="#0c3b2e"/>
+                  <rect x="68" y="62" width="12" height="12" fill="#d92d20"/>
+                  <rect x="42" y="70" width="16" height="18" fill="#0c3b2e"/>
+                  <rect x="68" y="80" width="24" height="8" fill="#0c3b2e"/>
+                </svg>
+              </div>
+              <div style="font-size:0.8rem; color:var(--text-muted);">
+                UPI ID: <strong style="color:var(--text-main);">thefooder@upi</strong> (simulated)
+              </div>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid var(--border-light); padding-top:1rem; display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+            <div>
+              <span style="font-size:0.85rem; color:var(--text-muted); display:block;">Amount to Pay:</span>
+              <strong style="font-size:1.3rem; color:var(--primary);" id="checkout-total-display">₹0</strong>
+            </div>
+            <button type="submit" class="btn-primary" style="padding:0.75rem 2rem;">
+              Confirm & Place Order
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Order Tracking Modal -->
+  <div class="modal-overlay" id="tracking-modal">
+    <div class="modal-card" style="max-width: 650px;">
+      <div class="modal-header">
+        <div>
+          <span style="font-size:0.75rem; text-transform:uppercase; color:var(--chilli); font-weight:800; display:block;">Live Order Tracking</span>
+          <h3 id="track-order-id-display">Order #FD4821</h3>
+        </div>
+        <button class="btn-close-cart" onclick="closeTrackingModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; justify-content:space-between; align-items:center; background:var(--primary-subtle); padding:1rem 1.25rem; border-radius:var(--radius-md);">
+          <div>
+            <div style="font-size:0.8rem; color:var(--primary); font-weight:700;">Delivering from:</div>
+            <strong id="track-branch-name" style="color:var(--primary-dark); font-size:1rem;">Vijayawada Branch</strong>
+            <div style="font-size:0.8rem; color:var(--text-muted);" id="track-branch-phone">+91 98480 00001</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Estimated Delivery:</div>
+            <strong id="track-est-delivery" style="font-size:1.1rem; color:var(--chilli);">25-35 mins</strong>
+          </div>
+        </div>
+
+        <!-- 4 Step Tracker as specified in PDF -->
+        <div class="tracking-stepper" id="tracking-stepper-container">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Order Items Recap in Tracker -->
+        <div id="tracker-items-summary" style="background:#fff; border:1px solid var(--border-light); border-radius:var(--radius-md); padding:1rem; margin-top:1.5rem;">
+          <!-- Item list rendered via JS -->
+        </div>
+
+        <!-- Simulation Controls for quick testing -->
+        <div class="tracking-control-box">
+          <div>
+            <strong style="font-size:0.85rem; color:var(--text-main); display:block;">🧪 Interactive Tracker Simulator</strong>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Auto-advances through steps or jump ahead manually</span>
+          </div>
+          <div style="display:flex; gap:0.5rem;">
+            <button class="btn-secondary" style="padding:0.4rem 0.8rem; font-size:0.8rem;" onclick="advanceTrackingStep()">
+              Next Step ⏭
+            </button>
+            <button class="btn-secondary" style="padding:0.4rem 0.8rem; font-size:0.8rem;" onclick="resetTrackingSimulation()">
+              Restart ↺
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Branch Selection Modal -->
+  <div class="modal-overlay" id="branch-modal">
+    <div class="modal-card" style="max-width: 700px;">
+      <div class="modal-header">
+        <h3>Select Your City / Branch</h3>
+        <button class="btn-close-cart" onclick="closeBranchModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1.25rem;">
+          Choose the nearest branch for delivery or table reservations. All branches serve authentic Vijayawada flavours.
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:1rem;" id="branch-picker-list">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Reservation Confirmation Modal -->
+  <div class="modal-overlay" id="reservation-success-modal">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 style="color:#15803d;">✓ Table Request Received!</h3>
+        <button class="btn-close-cart" onclick="closeReservationModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="reservation-pass" id="reservation-pass-card">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; color:rgba(255,255,255,0.7);">The Fooder Reservation Pass</div>
+              <div class="pass-id" id="pass-res-id">TB-8942</div>
+            </div>
+            <div style="font-size:1.8rem;">🍽️</div>
+          </div>
+
+          <div class="pass-grid">
+            <div class="pass-cell">
+              <label>Guest Name</label>
+              <span id="pass-guest-name">Ramesh Reddy</span>
+            </div>
+            <div class="pass-cell">
+              <label>Guests</label>
+              <span id="pass-guest-count">4 Persons</span>
+            </div>
+            <div class="pass-cell">
+              <label>Branch</label>
+              <span id="pass-branch-name">Vijayawada</span>
+            </div>
+            <div class="pass-cell">
+              <label>Date & Time</label>
+              <span id="pass-datetime">Today, 01:00 PM</span>
+            </div>
+          </div>
+
+          <div style="font-size:0.85rem; background:rgba(0,0,0,0.2); padding:0.75rem 1rem; border-radius:var(--radius-sm); border-left:3px solid var(--gold-light);">
+            📞 <strong>Confirmation Status:</strong> The branch calls you to confirm your table. Please keep your phone reachable!
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem; text-align:center;">
+          <button class="btn-primary" onclick="closeReservationModal()" style="padding:0.7rem 2rem;">
+            Done & Return to Menu
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h2>The Fooder</h2>
+          <p style="margin-bottom:1rem;">Real Andhra flavour, from Vijayawada to your table.</p>
+          <p style="font-size:0.85rem;">At The Fooder we serve gongura pickle, pappu, ghee and fiery curries cooked the way Vijayawada cooks them. Order for delivery or book a table in your city.</p>
+          <div style="margin-top:1.25rem;">
+            <span style="display:inline-block; font-size:0.75rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:0.3rem 0.75rem; border-radius:999px; color:#fde047;">
+              ⚡ Vercel & MongoDB Atlas Ready
+            </span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Our 6 Branches</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="selectActiveBranch('vijayawada')">Vijayawada (MG Road, Labbipet)</a></li>
+            <li><a href="javascript:void(0)" onclick="selectActiveBranch('guntur')">Guntur (Brodipet 3rd Lane)</a></li>
+            <li><a href="javascript:void(0)" onclick="selectActiveBranch('eluru')">Eluru (Powerpet Main Road)</a></li>
+            <li><a href="javascript:void(0)" onclick="selectActiveBranch('machilipatnam')">Machilipatnam (Chilakalapudi)</a></li>
+            <li><a href="javascript:void(0)" onclick="selectActiveBranch('tenali')">Tenali (Bose Road)</a></li>
+            <li><a href="javascript:void(0)" onclick="selectActiveBranch('hyderabad')">Hyderabad (Jubilee Hills)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Menu Highlights</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="filterMenuByCategory('meals')">Andhra Veg Meals (₹180)</a></li>
+            <li><a href="javascript:void(0)" onclick="filterMenuByCategory('curries')">Gongura Mutton (₹360)</a></li>
+            <li><a href="javascript:void(0)" onclick="filterMenuByCategory('curries')">Natu Kodi Pulusu (₹320)</a></li>
+            <li><a href="javascript:void(0)" onclick="filterMenuByCategory('biryani')">Chicken Dum Biryani (₹260)</a></li>
+            <li><a href="javascript:void(0)" onclick="filterMenuByCategory('tiffins')">Pesarattu Upma (₹90)</a></li>
+            <li><a href="javascript:void(0)" onclick="filterMenuByCategory('sweets')">Pootharekulu & Bobbatlu</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Quick Access</h4>
+          <ul class="footer-links">
+            <li><a href="#table-booking">Book a Table</a></li>
+            <li><a href="javascript:void(0)" onclick="openTrackOrderModal()">Track My Order</a></li>
+            <li><a href="#offers-reviews">Offers & Reviews</a></li>
+            <li><a href="javascript:void(0)" onclick="openBranchModal()">Change City</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>The Fooder - Andhra Food Restaurant. Phone numbers, addresses and the UPI ID in this document are placeholders.</p>
+        <p style="margin-top:0.4rem; opacity:0.7;">Crafted with passion for authentic Andhra cuisine.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
