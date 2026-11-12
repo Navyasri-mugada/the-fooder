@@ -68,7 +68,7 @@
         </button>
 
         <!-- Cart Button -->
-        <button id="nav-cart-btn" class="btn-cart" onclick="toggleCartDrawer()">
+        <button id="nav-cart-btn" class="btn-cart" onclick="openCartDrawer()">
           <span>🛒 Cart</span>
           <span id="cart-item-count" class="cart-count">0</span>
           <span id="cart-nav-total" style="font-size:0.85rem; margin-left:2px; font-weight:800;">₹0</span>
@@ -427,15 +427,27 @@
     </section>
   </main>
 
+  <!-- Floating Bottom Cart Bar (Swiggy / Zomato style) -->
+  <div id="floating-cart-bar" class="floating-cart-bar" onclick="openCartDrawer()">
+    <div class="floating-cart-info">
+      <span class="floating-cart-count" id="floating-cart-count">0 Items</span>
+      <span class="floating-cart-total" id="floating-cart-total">₹0</span>
+    </div>
+    <div class="floating-cart-btn">
+      <span>View Cart & Checkout</span>
+      <span>➔</span>
+    </div>
+  </div>
+
   <!-- Slide-out Cart Drawer -->
-  <div class="cart-overlay" id="cart-overlay" onclick="toggleCartDrawer()"></div>
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCartDrawer()"></div>
   <aside class="cart-drawer" id="cart-drawer">
     <div class="cart-header">
       <h3>
         <span>🛒</span>
         <span>Your Food Basket</span>
       </h3>
-      <button class="btn-close-cart" onclick="toggleCartDrawer()">✕</button>
+      <button class="btn-close-cart" onclick="closeCartDrawer()">✕</button>
     </div>
 
     <!-- Free Sweet Perk Progress Bar -->

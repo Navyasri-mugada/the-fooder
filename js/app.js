@@ -400,14 +400,14 @@ function renderMenuItems() {
 
           <div class="dish-action-wrap">
             ${inCartQty === 0 ? `
-              <button class="btn-add-item" onclick="addToCart('${dish.id}')">
+              <button class="btn-add-item" onclick="addToCart('${dish.id}', true)">
                 <span>+ ADD</span>
               </button>
             ` : `
               <div class="qty-counter">
                 <button class="qty-btn" onclick="decreaseCartItem('${dish.id}')" title="Decrease">−</button>
                 <span class="qty-number">${inCartQty}</span>
-                <button class="qty-btn" onclick="addToCart('${dish.id}')" title="Increase">+</button>
+                <button class="qty-btn" onclick="addToCart('${dish.id}', false)" title="Increase">+</button>
               </div>
             `}
           </div>
@@ -436,7 +436,12 @@ function saveCart() {
   renderMenuItems();
 }
 
-function addToCart(dishId) {
+/**
+ * Adds an item to the basket.
+ * If autoOpen is true (e.g. clicking + ADD from the dish card),
+ * it automatically slides open the cart drawer so the user immediately sees the order & checkout button!
+ */
+function addToCart(dishId, autoOpen = true) {
   const dish = RESTAURANT_DATA.menuItems.find(d => d.id === dishId);
   if (!dish) return;
 
@@ -457,6 +462,11 @@ function addToCart(dishId) {
   playSound('add');
   showToast(`Added "${dish.name}" to basket`, 'cart');
   saveCart();
+
+  // If clicked from menu card, immediately open the cart basket so user can see it!
+  if (autoOpen) {
+    openCartDrawer();
+  }
 }
 
 function decreaseCartItem(dishId) {
@@ -485,12 +495,29 @@ function updateCartUI() {
   const count = getCartItemCount();
   const subtotal = getCartSubtotal();
 
+  // Header Nav button count & amount
   const countBadge = document.getElementById('cart-item-count');
   if (countBadge) countBadge.textContent = count;
 
   const navTotal = document.getElementById('cart-nav-total');
   if (navTotal) navTotal.textContent = `₹${subtotal}`;
 
+  // Floating bottom bar update
+  const floatingBar = document.getElementById('floating-cart-bar');
+  const floatingCount = document.getElementById('floating-cart-count');
+  const floatingTotal = document.getElementById('floating-cart-total');
+
+  if (floatingBar) {
+    if (count > 0) {
+      floatingBar.classList.add('visible');
+      if (floatingCount) floatingCount.textContent = `${count} Item${count > 1 ? 's' : ''}`;
+      if (floatingTotal) floatingTotal.textContent = `₹${subtotal}`;
+    } else {
+      floatingBar.classList.remove('visible');
+    }
+  }
+
+  // Free sweet perk progress bar
   const perkText = document.getElementById('free-sweet-perk-text');
   const progressBar = document.getElementById('free-sweet-progress');
   const freeLine = document.getElementById('bill-free-sweet-line');
@@ -509,6 +536,7 @@ function updateCartUI() {
     if (freeLine) freeLine.style.display = 'none';
   }
 
+  // Cart List Items
   const listContainer = document.getElementById('cart-items-list');
   if (listContainer) {
     if (STATE.cart.length === 0) {
@@ -517,7 +545,7 @@ function updateCartUI() {
           <div class="icon">🛒</div>
           <h4 style="color:var(--primary); margin-bottom:0.5rem;">Your Food Basket is Empty</h4>
           <p style="font-size:0.9rem;">Add some mouth-watering Andhra curries, biryani, or meals to get started!</p>
-          <button class="btn-primary" style="margin-top:1.25rem; padding:0.6rem 1.5rem;" onclick="toggleCartDrawer()">
+          <button class="btn-primary" style="margin-top:1.25rem; padding:0.6rem 1.5rem;" onclick="closeCartDrawer()">
             Browse Dishes
           </button>
         </div>
@@ -537,7 +565,7 @@ function updateCartUI() {
             <div class="qty-counter" style="margin-right:0.5rem;">
               <button class="qty-btn" style="width:26px; height:26px; font-size:0.85rem;" onclick="decreaseCartItem('${item.id}')">−</button>
               <span class="qty-number" style="min-width:20px; font-size:0.8rem;">${item.qty}</span>
-              <button class="qty-btn" style="width:26px; height:26px; font-size:0.85rem;" onclick="addToCart('${item.id}')">+</button>
+              <button class="qty-btn" style="width:26px; height:26px; font-size:0.85rem;" onclick="addToCart('${item.id}', false)">+</button>
             </div>
             <div class="cart-item-total">₹${item.price * item.qty}</div>
           </div>
@@ -577,20 +605,22 @@ function updateCartUI() {
   }
 }
 
-function toggleCartDrawer() {
+// Open & Close Drawer
+function openCartDrawer() {
   const overlay = document.getElementById('cart-overlay');
   const drawer = document.getElementById('cart-drawer');
   if (!overlay || !drawer) return;
 
-  const isOpen = drawer.classList.contains('open');
-  if (isOpen) {
-    drawer.classList.remove('open');
-    overlay.classList.remove('open');
-  } else {
-    updateCartUI();
-    drawer.classList.add('open');
-    overlay.classList.add('open');
-  }
+  updateCartUI();
+  drawer.classList.add('open');
+  overlay.classList.add('open');
+}
+
+function closeCartDrawer() {
+  const overlay = document.getElementById('cart-overlay');
+  const drawer = document.getElementById('cart-drawer');
+  if (drawer) drawer.classList.remove('open');
+  if (overlay) overlay.classList.remove('open');
 }
 
 // Checkout & Payment (Syncs to Supabase Cloud)
@@ -600,7 +630,7 @@ function openCheckoutModal() {
     return;
   }
 
-  toggleCartDrawer();
+  closeCartDrawer();
   const modal = document.getElementById('checkout-modal');
   const branch = getActiveBranch();
 

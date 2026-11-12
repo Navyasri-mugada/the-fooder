@@ -1,23 +1,23 @@
 /**
  * Supabase Cloud PostgreSQL Service for The Fooder
  * 
- * INSTRUCTIONS:
- * 1. Go to https://supabase.com/ and click "Start your project" (Sign in with GitHub).
- * 2. Click "New project", name it "the-fooder".
- * 3. Go to Project Settings -> API and copy:
- *    - Project URL
- *    - Project API Key (anon / public)
- * 4. Paste them into the SUPABASE_URL and SUPABASE_ANON_KEY constants below!
+ * Your Project URL has been pre-configured:
+ * https://likcxbuwroxqhiqnkufr.supabase.co
+ * 
+ * To get your Project API Key (anon / public):
+ * 1. Go to your Supabase project settings -> API
+ * 2. Copy the "anon public" key (starts with eyJhbGci...)
+ * 3. Paste it into SUPABASE_ANON_KEY below!
  */
 
-const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; // e.g. https://abcdefghijklm.supabase.co
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // starts with eyJhbGci...
+const SUPABASE_URL = "https://likcxbuwroxqhiqnkufr.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // Replace with your anon key from Supabase Settings -> API
 
 let supabaseClient = null;
 let supabaseInitialized = false;
 
-// Initialize Supabase if user has provided real credentials
-if (typeof supabase !== 'undefined' && SUPABASE_URL !== "YOUR_SUPABASE_PROJECT_URL" && SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY") {
+// Initialize Supabase if valid key is provided
+if (typeof supabase !== 'undefined' && SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY") {
   try {
     supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     supabaseInitialized = true;
@@ -26,7 +26,7 @@ if (typeof supabase !== 'undefined' && SUPABASE_URL !== "YOUR_SUPABASE_PROJECT_U
     console.warn("Supabase initialization error, falling back to local storage:", err);
   }
 } else {
-  console.log("ℹ️ Supabase credentials not set yet. Running with local browser storage. Update js/supabase-config.js with your keys to enable cloud sync.");
+  console.log("ℹ️ Supabase anon key not set yet. Running with local browser storage. Update js/supabase-config.js with your key to enable cloud sync.");
 }
 
 /**
