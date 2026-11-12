@@ -22,8 +22,11 @@ Works seamlessly on **GitHub Pages**, **Vercel**, or local hosting.
    - Order received ➔ Cooking ➔ Out for delivery ➔ Delivered.
 6. **📅 Table Reservation Pass Generator**:
    - Generates branded booking passes (`TB-xxxx`) with instant confirmation status.
-7. **⚡ Supabase PostgreSQL Integration**:
-   - Direct real-time cloud database for Orders, Table Reservations, and Reviews.
+7. **👤 Customer Profile & Cloud Credentials**:
+   - Customer profile modal to save credentials (name, phone, address) for one-click checkout and reservations.
+   - Built-in Supabase Cloud configuration UI tab to enter your `anon` key directly from the browser with live connection status.
+8. **⚡ Supabase PostgreSQL Integration**:
+   - Direct real-time cloud database for Orders, Table Reservations, and Reviews with automatic offline fallback.
 
 ---
 

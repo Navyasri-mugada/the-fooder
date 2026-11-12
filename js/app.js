@@ -16,7 +16,8 @@ const STATE = {
   selectedPayment: 'COD',
   activeOrder: JSON.parse(localStorage.getItem('thefooder_active_order') || 'null'),
   trackingTimer: null,
-  reviews: JSON.parse(localStorage.getItem('thefooder_reviews') || JSON.stringify(RESTAURANT_DATA.reviews))
+  reviews: JSON.parse(localStorage.getItem('thefooder_reviews') || JSON.stringify(RESTAURANT_DATA.reviews)),
+  user: JSON.parse(localStorage.getItem('thefooder_user') || 'null')
 };
 
 // Web Audio API Sound Synthesizer (Zero external dependencies)
@@ -640,6 +641,8 @@ function openCheckoutModal() {
   const totalDisplay = document.getElementById('checkout-total-display');
   if (totalDisplay) totalDisplay.textContent = `₹${getCartSubtotal()}`;
 
+  prefillCustomerForms();
+
   if (modal) modal.classList.add('open');
 }
 
@@ -720,6 +723,13 @@ async function handleOrderSubmission(e) {
   // Reset cart
   STATE.cart = [];
   saveCart();
+
+  // If user credentials not explicitly set, auto-save customer profile for future visits
+  if (!STATE.user) {
+    STATE.user = { name, phone, address, email: '' };
+    localStorage.setItem('thefooder_user', JSON.stringify(STATE.user));
+    updateUserUI();
+  }
 
   closeCheckoutModal();
   playSound('success');
@@ -925,8 +935,15 @@ async function handleReservationSubmit(e) {
   playSound('success');
   showToast(`Table request ${resId} submitted! The branch will call you.`, 'success');
 
+  if (!STATE.user) {
+    STATE.user = { name, phone, address: '', email: '' };
+    localStorage.setItem('thefooder_user', JSON.stringify(STATE.user));
+    updateUserUI();
+  }
+
   e.target.reset();
   setupDatePicker();
+  prefillCustomerForms();
 }
 
 function closeReservationModal() {
@@ -1053,6 +1070,207 @@ function toggleMobileNav() {
   }
 }
 
+// User Authentication & Credentials Management
+function openAuthModal(defaultTab = 'profile') {
+  const modal = document.getElementById('auth-modal');
+  if (!modal) return;
+
+  switchAuthTab(defaultTab);
+
+  const credName = document.getElementById('cred-name');
+  const credPhone = document.getElementById('cred-phone');
+  const credAddress = document.getElementById('cred-address');
+  const credEmail = document.getElementById('cred-email');
+  const logoutWrap = document.getElementById('logout-btn-wrap');
+  const modalTitle = document.getElementById('auth-modal-title');
+
+  if (STATE.user) {
+    if (credName) credName.value = STATE.user.name || '';
+    if (credPhone) credPhone.value = STATE.user.phone || '';
+    if (credAddress) credAddress.value = STATE.user.address || '';
+    if (credEmail) credEmail.value = STATE.user.email || '';
+    if (logoutWrap) logoutWrap.style.display = 'block';
+    if (modalTitle) modalTitle.textContent = `👤 Profile: ${STATE.user.name.split(' ')[0]}`;
+  } else {
+    if (credName) credName.value = '';
+    if (credPhone) credPhone.value = '';
+    if (credAddress) credAddress.value = '';
+    if (credEmail) credEmail.value = '';
+    if (logoutWrap) logoutWrap.style.display = 'none';
+    if (modalTitle) modalTitle.textContent = '👤 Customer Credentials';
+  }
+
+  // Prefill cloud key if saved
+  const keyInput = document.getElementById('cloud-supabase-key');
+  const savedKey = localStorage.getItem('thefooder_supabase_anon_key');
+  if (keyInput && savedKey) {
+    keyInput.value = savedKey;
+  }
+  updateSupabaseStatusUI();
+
+  modal.classList.add('open');
+}
+
+function closeAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (modal) modal.classList.remove('open');
+}
+
+function switchAuthTab(tab) {
+  const profileTab = document.getElementById('auth-tab-profile');
+  const cloudTab = document.getElementById('auth-tab-cloud');
+  const profileSection = document.getElementById('auth-section-profile');
+  const cloudSection = document.getElementById('auth-section-cloud');
+
+  if (tab === 'profile') {
+    profileTab?.classList.add('active');
+    cloudTab?.classList.remove('active');
+    if (profileSection) profileSection.style.display = 'block';
+    if (cloudSection) cloudSection.style.display = 'none';
+  } else {
+    cloudTab?.classList.add('active');
+    profileTab?.classList.remove('active');
+    if (cloudSection) cloudSection.style.display = 'block';
+    if (profileSection) profileSection.style.display = 'none';
+    updateSupabaseStatusUI();
+  }
+}
+
+function handleUserCredentialsSubmit(e) {
+  e.preventDefault();
+  const name = document.getElementById('cred-name')?.value.trim();
+  const phone = document.getElementById('cred-phone')?.value.trim();
+  const address = document.getElementById('cred-address')?.value.trim();
+  const email = document.getElementById('cred-email')?.value.trim();
+
+  if (!name || !phone) {
+    showToast('Please provide your name and phone number.');
+    return;
+  }
+
+  if (phone.length !== 10 || !/^\d{10}$/.test(phone)) {
+    showToast('Please enter a valid 10-digit mobile number.');
+    return;
+  }
+
+  STATE.user = { name, phone, address, email };
+  localStorage.setItem('thefooder_user', JSON.stringify(STATE.user));
+
+  updateUserUI();
+  prefillCustomerForms();
+  closeAuthModal();
+  playSound('success');
+  showToast(`Welcome, ${name}! Your credentials have been saved.`, 'success');
+}
+
+function logoutUser() {
+  STATE.user = null;
+  localStorage.removeItem('thefooder_user');
+  updateUserUI();
+  closeAuthModal();
+  playSound('remove');
+  showToast('You have signed out from this device.');
+}
+
+function updateUserUI() {
+  const label = document.getElementById('nav-user-label');
+  const icon = document.getElementById('nav-user-icon');
+  const btn = document.getElementById('nav-user-btn');
+
+  if (STATE.user && STATE.user.name) {
+    const firstName = STATE.user.name.split(' ')[0];
+    if (label) label.textContent = firstName;
+    if (icon) icon.textContent = '👤';
+    if (btn) {
+      btn.title = `Signed in as ${STATE.user.name} (${STATE.user.phone}) - Click to edit`;
+      btn.style.borderColor = 'var(--primary)';
+      btn.style.color = 'var(--primary-dark)';
+    }
+  } else {
+    if (label) label.textContent = 'Sign In';
+    if (icon) icon.textContent = '👤';
+    if (btn) {
+      btn.title = 'Sign In / Customer Profile';
+      btn.style.borderColor = 'var(--border-medium)';
+      btn.style.color = 'var(--primary)';
+    }
+  }
+}
+
+function prefillCustomerForms() {
+  if (!STATE.user) return;
+
+  const orderName = document.getElementById('order-customer-name');
+  const orderPhone = document.getElementById('order-customer-phone');
+  const orderAddress = document.getElementById('order-address');
+
+  if (orderName && !orderName.value) orderName.value = STATE.user.name || '';
+  if (orderPhone && !orderPhone.value) orderPhone.value = STATE.user.phone || '';
+  if (orderAddress && !orderAddress.value) orderAddress.value = STATE.user.address || '';
+
+  const resName = document.getElementById('res-name');
+  const resPhone = document.getElementById('res-phone');
+
+  if (resName && !resName.value) resName.value = STATE.user.name || '';
+  if (resPhone && !resPhone.value) resPhone.value = STATE.user.phone || '';
+
+  const revName = document.getElementById('review-name');
+  if (revName && !revName.value) revName.value = STATE.user.name || '';
+}
+
+// Supabase Cloud Credentials UI handlers
+function saveSupabaseCredentials() {
+  const keyInput = document.getElementById('cloud-supabase-key');
+  const key = keyInput ? keyInput.value.trim() : '';
+
+  if (!key) {
+    showToast('Please paste your Supabase anon public API key.');
+    return;
+  }
+
+  if (typeof initSupabase === 'function') {
+    const connected = initSupabase(key);
+    updateSupabaseStatusUI();
+    if (connected) {
+      playSound('success');
+      showToast('⚡ Supabase Cloud Connected successfully!', 'success');
+      if (typeof loadCloudReviews === 'function') loadCloudReviews();
+    } else {
+      showToast('Supabase key saved into browser settings.', 'info');
+    }
+  }
+}
+
+function clearSupabaseCredentials() {
+  localStorage.removeItem('thefooder_supabase_anon_key');
+  const keyInput = document.getElementById('cloud-supabase-key');
+  if (keyInput) keyInput.value = '';
+  if (typeof initSupabase === 'function') {
+    initSupabase('YOUR_SUPABASE_ANON_KEY');
+  }
+  updateSupabaseStatusUI();
+  showToast('Supabase credentials reset to local storage fallback.');
+}
+
+function updateSupabaseStatusUI() {
+  const dot = document.getElementById('supabase-status-dot');
+  const text = document.getElementById('supabase-status-text');
+  if (!dot || !text) return;
+
+  const connected = typeof isSupabaseConnected === 'function' && isSupabaseConnected();
+  if (connected) {
+    dot.style.background = '#22c55e';
+    text.textContent = 'Cloud status: Connected to Supabase PostgreSQL (Live Sync Active)';
+    text.style.color = '#15803d';
+    text.style.fontWeight = '700';
+  } else {
+    dot.style.background = '#f59e0b';
+    text.textContent = 'Cloud status: Local storage fallback active (Offline-first)';
+    text.style.color = '#b45309';
+    text.style.fontWeight = '500';
+  }
+}
+
 // Initialization on DOM Loaded
 document.addEventListener('DOMContentLoaded', () => {
   updateBranchUI();
@@ -1064,6 +1282,8 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCartUI();
   setupDatePicker();
   loadCloudReviews();
+  updateUserUI();
+  prefillCustomerForms();
 
   const soundBtn = document.getElementById('sound-toggle-btn');
   if (soundBtn) {

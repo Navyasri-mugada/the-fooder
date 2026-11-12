@@ -60,6 +60,12 @@
           🔔
         </button>
 
+        <!-- User Profile / Login Button -->
+        <button id="nav-user-btn" class="btn-auth-user" onclick="openAuthModal()">
+          <span id="nav-user-icon">👤</span>
+          <span id="nav-user-label">Sign In</span>
+        </button>
+
         <!-- Branch Selector Pill -->
         <button class="branch-select-btn" onclick="openBranchModal()">
           <span class="status-dot"></span>
@@ -436,6 +442,101 @@
     <div class="floating-cart-btn">
       <span>View Cart & Checkout</span>
       <span>➔</span>
+    </div>
+  </div>
+
+  <!-- User Login & Account Modal -->
+  <div class="modal-overlay" id="auth-modal" onclick="if(event.target===this)closeAuthModal()">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 id="auth-modal-title">👤 User & Cloud Credentials</h3>
+        <button class="btn-close-cart" onclick="closeAuthModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="auth-tabs-row">
+          <button type="button" id="auth-tab-profile" class="auth-tab-btn active" onclick="switchAuthTab('profile')">
+            👤 Customer Profile
+          </button>
+          <button type="button" id="auth-tab-cloud" class="auth-tab-btn" onclick="switchAuthTab('cloud')">
+            ⚡ Supabase Cloud
+          </button>
+        </div>
+
+        <!-- Section 1: Customer Profile -->
+        <div id="auth-section-profile">
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.25rem;">
+            Save your customer details once. They will automatically fill in during checkout and table reservations!
+          </p>
+
+          <form id="user-credentials-form" onsubmit="handleUserCredentialsSubmit(event)">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="cred-name" class="form-input" placeholder="e.g. Ananya Rao" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">10-Digit Mobile Phone Number *</label>
+              <input type="tel" id="cred-phone" class="form-input" placeholder="e.g. 9848099999" pattern="[0-9]{10}" maxlength="10" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Default Delivery Street Address</label>
+              <input type="text" id="cred-address" class="form-input" placeholder="House/Flat No., Landmark, Street">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email (Optional - for order receipts)</label>
+              <input type="email" id="cred-email" class="form-input" placeholder="e.g. ananya@example.com">
+            </div>
+
+            <div style="margin-top:1.5rem; text-align:center;">
+              <button type="submit" class="btn-primary" style="width:100%; justify-content:center; padding:0.8rem;">
+                Save Credentials & Sign In
+              </button>
+            </div>
+
+            <div id="logout-btn-wrap" style="display:none; text-align:center; margin-top:0.75rem;">
+              <button type="button" style="background:none; color:var(--chilli); font-weight:700; font-size:0.85rem; cursor:pointer;" onclick="logoutUser()">
+                Sign Out from this Device
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Section 2: Supabase Cloud Database Config -->
+        <div id="auth-section-cloud" style="display:none;">
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.25rem;">
+            Connect your Supabase PostgreSQL cloud database to sync live orders, bookings, and reviews in real time.
+          </p>
+
+          <div class="form-group">
+            <label class="form-label">Supabase Project URL</label>
+            <input type="text" id="cloud-supabase-url" class="form-input" value="https://likcxbuwroxqhiqnkufr.supabase.co" readonly style="background:#f8fafc; font-size:0.85rem;">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Supabase Anon Public API Key *</label>
+            <input type="password" id="cloud-supabase-key" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="font-size:0.85rem; font-family:monospace;">
+            <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:0.35rem;">
+              Found in: Supabase Dashboard ➔ Project Settings (⚙️) ➔ API ➔ Project API keys ➔ <strong>anon public</strong>
+            </span>
+          </div>
+
+          <div id="supabase-status-pill" style="margin:1rem 0; padding:0.6rem 0.85rem; border-radius:var(--radius-sm); font-size:0.82rem; display:flex; align-items:center; gap:0.5rem; background:#f1f5f9; color:var(--text-secondary);">
+            <span id="supabase-status-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#94a3b8;"></span>
+            <span id="supabase-status-text">Cloud status: Local storage fallback active</span>
+          </div>
+
+          <div style="display:flex; gap:0.5rem; margin-top:1.25rem;">
+            <button type="button" class="btn-primary" style="flex:1; justify-content:center; padding:0.75rem;" onclick="saveSupabaseCredentials()">
+              Save Key & Connect
+            </button>
+            <button type="button" class="btn-outline" style="padding:0.75rem;" onclick="clearSupabaseCredentials()">
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

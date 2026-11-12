@@ -11,22 +11,43 @@
  */
 
 const SUPABASE_URL = "https://likcxbuwroxqhiqnkufr.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // Replace with your anon key from Supabase Settings -> API
+let SUPABASE_ANON_KEY = (typeof localStorage !== 'undefined' && localStorage.getItem('thefooder_supabase_anon_key')) || "YOUR_SUPABASE_ANON_KEY";
 
 let supabaseClient = null;
 let supabaseInitialized = false;
 
 // Initialize Supabase if valid key is provided
-if (typeof supabase !== 'undefined' && SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY") {
-  try {
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    supabaseInitialized = true;
-    console.log("⚡ Supabase PostgreSQL connected successfully to The Fooder!");
-  } catch (err) {
-    console.warn("Supabase initialization error, falling back to local storage:", err);
+function initSupabase(customKey) {
+  if (customKey) {
+    SUPABASE_ANON_KEY = customKey.trim();
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('thefooder_supabase_anon_key', SUPABASE_ANON_KEY);
+    }
   }
-} else {
-  console.log("ℹ️ Supabase anon key not set yet. Running with local browser storage. Update js/supabase-config.js with your key to enable cloud sync.");
+
+  if (typeof supabase !== 'undefined' && SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY") {
+    try {
+      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      supabaseInitialized = true;
+      console.log("⚡ Supabase PostgreSQL connected successfully to The Fooder!");
+      return true;
+    } catch (err) {
+      console.warn("Supabase initialization error, falling back to local storage:", err);
+      supabaseInitialized = false;
+      return false;
+    }
+  } else {
+    supabaseInitialized = false;
+    console.log("ℹ️ Supabase anon key not set yet. Running with local browser storage. Update credentials to enable cloud sync.");
+    return false;
+  }
+}
+
+// Auto-run on load
+initSupabase();
+
+function isSupabaseConnected() {
+  return supabaseInitialized && supabaseClient !== null;
 }
 
 /**
