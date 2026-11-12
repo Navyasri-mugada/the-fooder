@@ -1,7 +1,5 @@
 // api/db.js
-// MongoDB Atlas Connection Handler with Serverless Connection Caching
-
-const { MongoClient, ServerApiVersion } = require('mongodb');
+// Optional MongoDB Atlas connection with automatic In-Memory Fallback
 
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB || 'thefooder';
@@ -9,34 +7,72 @@ const dbName = process.env.MONGODB_DB || 'thefooder';
 let cachedClient = null;
 let cachedDb = null;
 
-async function connectToDatabase() {
-  // If MongoDB URI is not set, throw informative error
-  if (!uri) {
-    throw new Error('MONGODB_URI environment variable is missing. Please set it in Vercel or your .env file.');
-  }
-
-  // Reuse existing connection if alive
-  if (cachedClient && cachedDb) {
-    return { client: cachedClient, db: cachedDb };
-  }
-
-  const client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
+// In-Memory fallback store if MongoDB is not used
+const inMemoryStore = {
+  orders: [],
+  bookings: [],
+  reviews: [
+    {
+      id: "r1",
+      guest: "Ravi",
+      city: "Vijayawada",
+      dish: "Gongura Mutton",
+      rating: 5,
+      comment: "The gongura mutton is exactly like home. Spicy, sour and worth the wait.",
+      verified: true,
+      createdAt: new Date()
     },
-    maxPoolSize: 10,
-    connectTimeoutMS: 5000,
-  });
+    {
+      id: "r2",
+      guest: "Lakshmi",
+      city: "Guntur",
+      dish: "Andhra Veg Meals",
+      rating: 5,
+      comment: "We ordered meals for the whole family. Hot, on time and generous with ghee.",
+      verified: true,
+      createdAt: new Date()
+    },
+    {
+      id: "r3",
+      guest: "Srinivas",
+      city: "Hyderabad",
+      dish: "Pootharekulu & Biryani",
+      rating: 4,
+      comment: "Best pootharekulu outside Atreyapuram. The biryani is very good too.",
+      verified: true,
+      createdAt: new Date()
+    }
+  ]
+};
 
-  await client.connect();
-  const db = client.db(dbName);
+async function connectToDatabase() {
+  if (!uri) {
+    // Graceful fallback: No MongoDB required!
+    return { client: null, db: null, isInMemory: true, inMemoryStore };
+  }
 
-  cachedClient = client;
-  cachedDb = db;
+  try {
+    const { MongoClient, ServerApiVersion } = require('mongodb');
 
-  return { client, db };
+    if (cachedClient && cachedDb) {
+      return { client: cachedClient, db: cachedDb, isInMemory: false };
+    }
+
+    const client = new MongoClient(uri, {
+      serverApi: { version: ServerApiVersion.v1, strict: true, deprecationErrors: true },
+      maxPoolSize: 10,
+      connectTimeoutMS: 4000,
+    });
+
+    await client.connect();
+    const db = client.db(dbName);
+    cachedClient = client;
+    cachedDb = db;
+    return { client, db, isInMemory: false };
+  } catch (err) {
+    console.warn("MongoDB connection failed, using in-memory store:", err.message);
+    return { client: null, db: null, isInMemory: true, inMemoryStore };
+  }
 }
 
-module.exports = { connectToDatabase };
+module.exports = { connectToDatabase, inMemoryStore };
