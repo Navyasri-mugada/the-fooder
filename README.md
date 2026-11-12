@@ -2,9 +2,9 @@
 
 > **"Real Andhra flavour, from Vijayawada to your table."**
 
-A modern full-stack web application with responsive UI, interactive multi-city branch finder, menu ordering, table reservations, live 4-step order tracking, and **Google Firebase Firestore** cloud database integration.
+A modern full-stack web application with responsive UI, multi-city branch finder, menu ordering, table reservations, live 4-step order tracking, and **Supabase Cloud PostgreSQL** database integration.
 
-Works seamlessly on **GitHub Pages**, **Vercel**, or any static/cloud hosting.
+Works seamlessly on **GitHub Pages**, **Vercel**, or local hosting.
 
 ---
 
@@ -22,19 +22,22 @@ Works seamlessly on **GitHub Pages**, **Vercel**, or any static/cloud hosting.
    - Order received ➔ Cooking ➔ Out for delivery ➔ Delivered.
 6. **📅 Table Reservation Pass Generator**:
    - Generates branded booking passes (`TB-xxxx`) with instant confirmation status.
-7. **🔥 Google Firebase Firestore Integration**:
-   - Real-time cloud sync for Orders, Table Bookings, and Reviews with zero server code required.
+7. **⚡ Supabase PostgreSQL Integration**:
+   - Direct real-time cloud database for Orders, Table Reservations, and Reviews.
 
 ---
 
-## 🔥 How to Connect Your Firebase Firestore Database
+## ⚡ How to Connect Supabase (In 3 Minutes)
 
-1. Go to the [Firebase Console](https://console.firebase.google.com/) and sign in with your Google account.
-2. Click **Add project** (e.g. name it `the-fooder`).
-3. Click **Build** ➔ **Firestore Database** ➔ click **Create database** ➔ select **Start in test mode**.
-4. In Project Overview, click the **Web icon (`</>`)** to register a web app.
-5. Copy the `firebaseConfig` keys and paste them into [`js/firebase-config.js`](js/firebase-config.js).
-6. That's it! All orders, bookings, and reviews will now sync live to your Firebase Firestore cloud database!
+1. Go to **[supabase.com](https://supabase.com/)** and click **Start your project** (Sign in with your GitHub account in 1 click).
+2. Click **New project**, name it `the-fooder`, and enter a database password.
+3. In your Supabase Dashboard:
+   - Go to **Project Settings** (gear icon) ➔ **API**.
+   - Copy your **Project URL** and **Project API Key (anon / public)**.
+4. Paste them into [`js/supabase-config.js`](js/supabase-config.js).
+5. In Supabase, go to **SQL Editor** ➔ click **New query** ➔ paste the contents of [`supabase_setup.sql`](supabase_setup.sql) ➔ click **Run**.
+
+Done! All orders, bookings, and reviews will now sync directly to your Supabase PostgreSQL database.
 
 ---
 

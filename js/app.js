@@ -1,7 +1,7 @@
 /**
  * The Fooder - Andhra Food Restaurant
  * Core Interactive Application Logic
- * Supports Firebase Cloud Firestore with automatic LocalStorage Fallback
+ * Supports Supabase PostgreSQL Cloud with automatic LocalStorage Fallback
  */
 
 // Application State
@@ -112,7 +112,7 @@ function showToast(message, type = 'info') {
 
   setTimeout(() => {
     toast.classList.remove('show');
-    setTimeout(() => toast.remove(), 3200);
+    setTimeout(() => toast.remove(), 350);
   }, 3200);
 }
 
@@ -593,7 +593,7 @@ function toggleCartDrawer() {
   }
 }
 
-// Checkout & Payment (Syncs to Firebase Firestore)
+// Checkout & Payment (Syncs to Supabase Cloud)
 function openCheckoutModal() {
   if (STATE.cart.length === 0) {
     showToast('Your basket is empty. Please add dishes first.');
@@ -678,11 +678,11 @@ async function handleOrderSubmission(e) {
   STATE.activeOrder = newOrder;
   localStorage.setItem('thefooder_active_order', JSON.stringify(newOrder));
 
-  // 2. Sync to Firebase Firestore Cloud
-  if (typeof saveOrderToFirebase === 'function') {
-    saveOrderToFirebase(newOrder).then(res => {
-      if (res && res.mode === 'firestore') {
-        console.log('Order successfully synced to Firebase Firestore!');
+  // 2. Sync to Supabase Cloud PostgreSQL
+  if (typeof saveOrderToSupabase === 'function') {
+    saveOrderToSupabase(newOrder).then(res => {
+      if (res && res.mode === 'supabase') {
+        console.log('Order successfully synced to Supabase PostgreSQL!');
       }
     });
   }
@@ -842,7 +842,7 @@ function startTrackingSimulation() {
   }, 14000);
 }
 
-// Table Booking System (Syncs to Firebase Firestore)
+// Table Booking System (Syncs to Supabase Cloud)
 async function handleReservationSubmit(e) {
   e.preventDefault();
 
@@ -867,10 +867,10 @@ async function handleReservationSubmit(e) {
   const resId = `TB-${Math.floor(1000 + Math.random() * 9000)}`;
   const bookingDoc = { bookingId: resId, name, phone, branch: branchCity, guests, date, time, notes, status: 'Pending Confirmation' };
 
-  // Save to Firebase Firestore
-  if (typeof saveBookingToFirebase === 'function') {
-    saveBookingToFirebase(bookingDoc).then(res => {
-      if (res && res.mode === 'firestore') console.log('Booking stored in Firebase Firestore');
+  // Save to Supabase Cloud PostgreSQL
+  if (typeof saveBookingToSupabase === 'function') {
+    saveBookingToSupabase(bookingDoc).then(res => {
+      if (res && res.mode === 'supabase') console.log('Booking stored in Supabase PostgreSQL');
     });
   }
 
@@ -920,7 +920,7 @@ function setupDatePicker() {
   }
 }
 
-// Reviews & Testimonials (Syncs to Firebase Firestore)
+// Reviews & Testimonials (Syncs to Supabase Cloud)
 function renderReviews() {
   const container = document.getElementById('reviews-grid');
   if (!container) return;
@@ -946,8 +946,8 @@ function renderReviews() {
 }
 
 async function loadCloudReviews() {
-  if (typeof fetchReviewsFromFirebase === 'function') {
-    const cloudReviews = await fetchReviewsFromFirebase();
+  if (typeof fetchReviewsFromSupabase === 'function') {
+    const cloudReviews = await fetchReviewsFromSupabase();
     if (Array.isArray(cloudReviews) && cloudReviews.length > 0) {
       STATE.reviews = cloudReviews;
       renderReviews();
@@ -984,10 +984,10 @@ async function handleReviewSubmit(e) {
   localStorage.setItem('thefooder_reviews', JSON.stringify(STATE.reviews));
   renderReviews();
 
-  // Save to Firebase Firestore
-  if (typeof saveReviewToFirebase === 'function') {
-    saveReviewToFirebase(newReview).then(res => {
-      if (res && res.mode === 'firestore') console.log('Review saved to Firebase Firestore');
+  // Save to Supabase Cloud PostgreSQL
+  if (typeof saveReviewToSupabase === 'function') {
+    saveReviewToSupabase(newReview).then(res => {
+      if (res && res.mode === 'supabase') console.log('Review saved to Supabase PostgreSQL');
     });
   }
 
