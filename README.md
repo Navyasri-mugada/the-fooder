@@ -2,168 +2,47 @@
 
 > **"Real Andhra flavour, from Vijayawada to your table."**
 
-A modern full-stack web application with responsive UI, interactive multi-city branch finder, menu ordering, table reservations, live 4-step order tracking, and **MongoDB Atlas** database integration deployed on **Vercel** with **GitHub Actions CI/CD**.
+A modern full-stack web application with responsive UI, interactive multi-city branch finder, menu ordering, table reservations, live 4-step order tracking, and **Google Firebase Firestore** cloud database integration.
+
+Works seamlessly on **GitHub Pages**, **Vercel**, or any static/cloud hosting.
 
 ---
 
-## 🏗️ Architecture
+## 🌟 Key Features
 
-```
-                                      ┌────────────────────────────────┐
-                                      │         Vercel Cloud           │
-                                      │                                │
-[ Client Browser ] ─── HTTPS ───────► │ ├── Static Frontend (SPA)     │
-       ▲                              │ │   ├── index.html             │
-       │                              │ │   ├── css/styles.css         │
-       │                              │ │   └── js/app.js & data.js    │
-       │                              │ │                              │
-       └─────── REST API Calls ─────► │ └── Serverless API (/api/*)   │
-                                      │     ├── orders.js              │
-                                      │     ├── bookings.js            │
-                                      │     └── reviews.js             │
-                                      └──────────────┬─────────────────┘
-                                                     │ Mongoose / Native Driver
-                                                     ▼
-                                      ┌────────────────────────────────┐
-                                      │      MongoDB Atlas Cloud       │
-                                      │                                │
-                                      │  Collections:                  │
-                                      │  ├── orders                    │
-                                      │  ├── bookings                  │
-                                      │  └── reviews                   │
-                                      └────────────────────────────────┘
-```
+1. **📍 Multi-City Branch Finder & Selector**:
+   - Covers all 6 branches: Vijayawada, Guntur, Eluru, Machilipatnam, Tenali, and Hyderabad with dynamic timings and delivery estimates.
+2. **🍲 Handcrafted Andhra Menu**:
+   - Categorized (Meals, Curries, Biryani, Tiffins, Sweets) with authentic recipes, descriptions, and Indian Veg/Non-Veg indicators.
+3. **🎁 Automated Perks**:
+   - Automatic free **Bobbatlu** on orders above ₹500 with real-time progress bar.
+4. **🛒 Cart & Simulated UPI QR Checkout**:
+   - Supports Cash on Delivery and Online UPI payments.
+5. **⚡ Live 4-Step Order Tracker**:
+   - Order received ➔ Cooking ➔ Out for delivery ➔ Delivered.
+6. **📅 Table Reservation Pass Generator**:
+   - Generates branded booking passes (`TB-xxxx`) with instant confirmation status.
+7. **🔥 Google Firebase Firestore Integration**:
+   - Real-time cloud sync for Orders, Table Bookings, and Reviews with zero server code required.
 
 ---
 
-## 🚀 Step-by-Step Deployment Guide
+## 🔥 How to Connect Your Firebase Firestore Database
 
-### 1️⃣ Set up MongoDB Atlas (Free Cloud Database)
-
-1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and sign in (or create a free account).
-2. Click **Create a Deployment** and choose the **M0 Free Tier** cluster (e.g. AWS / Mumbai or any region).
-3. Under **Security Quickstart**:
-   - **Database User**: Create a username (e.g. `fooder_admin`) and a secure password. **Note down this password!**
-   - **Network Access**: Add IP Access List entry: Set to `0.0.0.0/0` (Allow Access from Anywhere) so Vercel's dynamic serverless IPs can connect.
-4. Click **Connect** ➔ choose **Drivers (Node.js)**.
-5. Copy your connection string. It looks like:
-   ```env
-   mongodb+srv://fooder_admin:<password>@cluster0.abcde.mongodb.net/thefooder?retryWrites=true&w=majority
-   ```
-   *(Replace `<password>` with your database user password and specify `/thefooder` as the database name).*
+1. Go to the [Firebase Console](https://console.firebase.google.com/) and sign in with your Google account.
+2. Click **Add project** (e.g. name it `the-fooder`).
+3. Click **Build** ➔ **Firestore Database** ➔ click **Create database** ➔ select **Start in test mode**.
+4. In Project Overview, click the **Web icon (`</>`)** to register a web app.
+5. Copy the `firebaseConfig` keys and paste them into [`js/firebase-config.js`](js/firebase-config.js).
+6. That's it! All orders, bookings, and reviews will now sync live to your Firebase Firestore cloud database!
 
 ---
 
-### 2️⃣ Push Code to GitHub
-
-Open your terminal in this project folder (`foodfinder`) and run:
+## 🚀 How to Run Locally
 
 ```bash
-# 1. Initialize git
-git init
-
-# 2. Add all files
-git add .
-
-# 3. Commit
-git commit -m "Initial commit: The Fooder app with Vercel and MongoDB Atlas"
-
-# 4. Rename main branch
-git branch -M main
-
-# 5. Link to your GitHub repository (replace with your repo URL)
-git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/the-fooder.git
-
-# 6. Push to GitHub
-git push -u origin main
-```
-
----
-
-### 3️⃣ Deploy to Vercel (Automatic Method)
-
-1. Go to [Vercel](https://vercel.com) and log in with your GitHub account.
-2. Click **Add New...** ➔ **Project**.
-3. Select your GitHub repository (`the-fooder`) and click **Import**.
-4. In the **Configure Project** screen:
-   - **Framework Preset**: Other (Static / Node)
-   - Expand **Environment Variables**:
-     - Key: `MONGODB_URI`
-     - Value: `mongodb+srv://fooder_admin:<password>@cluster0.abcde.mongodb.net/thefooder?retryWrites=true&w=majority`
-     - Key: `MONGODB_DB`
-     - Value: `thefooder`
-5. Click **Deploy**! 🚀
-6. Vercel will build your project, deploy the static frontend, and host the serverless functions in `/api/`. Your live site URL will be:
-   `https://the-fooder.vercel.app` (or similar).
-
----
-
-### 4️⃣ Set up the GitHub Actions CI/CD Workflow
-
-Your repository already includes the automated workflow file at [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
-
-Every time you push code to `main` or `master`, GitHub Actions will automatically validate the syntax and deploy to Vercel.
-
-To connect GitHub Actions to your Vercel project:
-
-1. Obtain your **Vercel Token**:
-   - Go to **Vercel Account Settings** ➔ **Tokens** ➔ Create a token (e.g. `GITHUB_ACTIONS_TOKEN`) and copy it.
-2. Obtain your **Vercel Org ID & Project ID**:
-   - In your local terminal, install Vercel CLI and link:
-     ```bash
-     npx vercel link
-     ```
-   - This creates `.vercel/project.json` containing `orgId` and `projectId`.
-3. Add Secrets to GitHub:
-   - Go to your GitHub repository ➔ **Settings** ➔ **Secrets and variables** ➔ **Actions**.
-   - Click **New repository secret** and add:
-     - `VERCEL_TOKEN`: *(Your Vercel personal access token)*
-     - `VERCEL_ORG_ID`: *(Your Vercel Organization ID)*
-     - `VERCEL_PROJECT_ID`: *(Your Vercel Project ID)*
-
-Now, any `git push origin main` triggers continuous deployment!
-
----
-
-## 🧪 Local Testing
-
-To test the application locally:
-
-```bash
-# 1. Install dependencies
-npm install
-
-# 2. Start the local server
 npm start
 # or
 node server.js
 ```
 Open **`http://localhost:3000`** in your browser.
-
----
-
-## 📁 Repository Structure
-
-```
-foodfinder/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml        # GitHub Actions CI/CD pipeline
-├── api/                      # Vercel Serverless Functions
-│   ├── db.js                 # MongoDB Atlas connection pooling
-│   ├── orders.js             # Order placement & tracking API
-│   ├── bookings.js           # Table reservation API
-│   └── reviews.js            # Guest review submission API
-├── css/
-│   └── styles.css            # Authentic Andhra design system
-├── js/
-│   ├── data.js               # 6 branches & complete menu dataset
-│   └── app.js                # Frontend state, cart & API sync
-├── .env.example              # Environment variables template
-├── .gitignore                # Git exclusions
-├── index.html                # Main single-page web app
-├── package.json              # NPM metadata & dependencies
-├── server.js                 # Local static HTTP server
-├── vercel.json               # Vercel routing & serverless config
-└── README.md                 # Complete documentation
-```

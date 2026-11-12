@@ -1,23 +1,19 @@
 {
   "name": "the-fooder-foodfinder",
   "version": "1.0.0",
-  "description": "The Fooder - Authentic Andhra Restaurant with Vercel & MongoDB Atlas Deployment",
+  "description": "The Fooder - Authentic Andhra Restaurant with Firebase Firestore Integration",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
-    "build": "echo 'Ready for Vercel deployment'"
+    "dev": "node server.js"
   },
-  "dependencies": {
-    "mongodb": "^6.10.0"
-  },
+  "dependencies": {},
   "keywords": [
     "the-fooder",
     "andhra-food",
     "restaurant",
-    "vercel",
-    "mongodb-atlas",
-    "github-actions"
+    "firebase",
+    "firestore"
   ],
   "author": "The Fooder",
   "license": "ISC"

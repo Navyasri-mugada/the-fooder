@@ -1,7 +1,7 @@
 /**
  * The Fooder - Andhra Food Restaurant
  * Core Interactive Application Logic
- * Supports both standalone LocalStorage and MongoDB Atlas Serverless API
+ * Supports Firebase Cloud Firestore with automatic LocalStorage Fallback
  */
 
 // Application State
@@ -112,7 +112,7 @@ function showToast(message, type = 'info') {
 
   setTimeout(() => {
     toast.classList.remove('show');
-    setTimeout(() => toast.remove(), 350);
+    setTimeout(() => toast.remove(), 3200);
   }, 3200);
 }
 
@@ -137,15 +137,12 @@ function selectActiveBranch(branchId) {
 function updateBranchUI() {
   const branch = getActiveBranch();
 
-  // Top announcement bar
   const quickBranch = document.getElementById('quick-branch-text');
   if (quickBranch) quickBranch.textContent = `${branch.city} (${branch.address.split(',')[0]}) • Open`;
 
-  // Nav pill
   const navBranch = document.getElementById('nav-branch-name');
   if (navBranch) navBranch.textContent = branch.city;
 
-  // Banner strip
   const bannerCity = document.getElementById('banner-branch-city');
   if (bannerCity) bannerCity.textContent = `${branch.city} Branch`;
 
@@ -158,15 +155,12 @@ function updateBranchUI() {
   const bannerTimings = document.getElementById('banner-branch-timings');
   if (bannerTimings) bannerTimings.textContent = branch.openHours;
 
-  // Checkout modal branch
   const checkoutBranch = document.getElementById('checkout-branch-name');
   if (checkoutBranch) checkoutBranch.textContent = `${branch.city} (${branch.address})`;
 
-  // Cart delivery city
   const billCity = document.getElementById('bill-branch-city');
   if (billCity) billCity.textContent = branch.city;
 
-  // Table reservation dropdown default
   const resBranch = document.getElementById('res-branch');
   if (resBranch) resBranch.value = branch.city;
 
@@ -599,7 +593,7 @@ function toggleCartDrawer() {
   }
 }
 
-// Checkout & Payment (with MongoDB Atlas API sync)
+// Checkout & Payment (Syncs to Firebase Firestore)
 function openCheckoutModal() {
   if (STATE.cart.length === 0) {
     showToast('Your basket is empty. Please add dishes first.');
@@ -680,25 +674,17 @@ async function handleOrderSubmission(e) {
     ]
   };
 
-  // 1. Save locally
+  // 1. Save in local browser storage
   STATE.activeOrder = newOrder;
   localStorage.setItem('thefooder_active_order', JSON.stringify(newOrder));
 
-  // 2. Sync to MongoDB Atlas via Serverless API if deployed
-  try {
-    fetch('/api/orders', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newOrder)
-    }).then(res => res.json()).then(data => {
-      if (data && data.success) {
-        console.log('Order synced to MongoDB Atlas:', data);
+  // 2. Sync to Firebase Firestore Cloud
+  if (typeof saveOrderToFirebase === 'function') {
+    saveOrderToFirebase(newOrder).then(res => {
+      if (res && res.mode === 'firestore') {
+        console.log('Order successfully synced to Firebase Firestore!');
       }
-    }).catch(err => {
-      console.debug('API offline/local mode: order stored locally.', err);
     });
-  } catch (err) {
-    // Graceful fallback
   }
 
   // Reset cart
@@ -856,7 +842,7 @@ function startTrackingSimulation() {
   }, 14000);
 }
 
-// Table Booking System (with MongoDB Atlas API sync)
+// Table Booking System (Syncs to Firebase Firestore)
 async function handleReservationSubmit(e) {
   e.preventDefault();
 
@@ -879,20 +865,14 @@ async function handleReservationSubmit(e) {
   }
 
   const resId = `TB-${Math.floor(1000 + Math.random() * 9000)}`;
-  const bookingDoc = { bookingId: resId, name, phone, branch: branchCity, guests, date, time, notes };
+  const bookingDoc = { bookingId: resId, name, phone, branch: branchCity, guests, date, time, notes, status: 'Pending Confirmation' };
 
-  // Sync to MongoDB Atlas API if online
-  try {
-    fetch('/api/bookings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(bookingDoc)
-    }).then(res => res.json()).then(data => {
-      if (data && data.success) console.log('Booking stored in MongoDB Atlas');
-    }).catch(err => {
-      console.debug('API offline/local mode: booking stored locally.', err);
+  // Save to Firebase Firestore
+  if (typeof saveBookingToFirebase === 'function') {
+    saveBookingToFirebase(bookingDoc).then(res => {
+      if (res && res.mode === 'firestore') console.log('Booking stored in Firebase Firestore');
     });
-  } catch (err) {}
+  }
 
   const idEl = document.getElementById('pass-res-id');
   if (idEl) idEl.textContent = resId;
@@ -940,7 +920,7 @@ function setupDatePicker() {
   }
 }
 
-// Reviews & Testimonials (with MongoDB Atlas API sync)
+// Reviews & Testimonials (Syncs to Firebase Firestore)
 function renderReviews() {
   const container = document.getElementById('reviews-grid');
   if (!container) return;
@@ -965,18 +945,13 @@ function renderReviews() {
   }).join('');
 }
 
-async function loadServerReviews() {
-  try {
-    const res = await fetch('/api/reviews');
-    if (res.ok) {
-      const serverReviews = await res.json();
-      if (Array.isArray(serverReviews) && serverReviews.length > 0) {
-        STATE.reviews = serverReviews;
-        renderReviews();
-      }
+async function loadCloudReviews() {
+  if (typeof fetchReviewsFromFirebase === 'function') {
+    const cloudReviews = await fetchReviewsFromFirebase();
+    if (Array.isArray(cloudReviews) && cloudReviews.length > 0) {
+      STATE.reviews = cloudReviews;
+      renderReviews();
     }
-  } catch (e) {
-    // Fallback to local
   }
 }
 
@@ -1009,18 +984,12 @@ async function handleReviewSubmit(e) {
   localStorage.setItem('thefooder_reviews', JSON.stringify(STATE.reviews));
   renderReviews();
 
-  // Sync to MongoDB Atlas API
-  try {
-    fetch('/api/reviews', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newReview)
-    }).then(res => res.json()).then(data => {
-      if (data && data.success) console.log('Review saved to MongoDB Atlas');
-    }).catch(err => {
-      console.debug('API offline/local mode.', err);
+  // Save to Firebase Firestore
+  if (typeof saveReviewToFirebase === 'function') {
+    saveReviewToFirebase(newReview).then(res => {
+      if (res && res.mode === 'firestore') console.log('Review saved to Firebase Firestore');
     });
-  } catch (err) {}
+  }
 
   e.target.reset();
   playSound('success');
@@ -1064,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderReviews();
   updateCartUI();
   setupDatePicker();
-  loadServerReviews();
+  loadCloudReviews();
 
   const soundBtn = document.getElementById('sound-toggle-btn');
   if (soundBtn) {
